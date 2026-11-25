@@ -29,7 +29,7 @@ const FEATURED_GAMES = [
     repo: 'felixpaint',
     title: 'Flex Paint',
     description: 'Draw with rainbow brushes, symmetry, drum stamps, and letter tracing.',
-    url: 'https://davtse15-alt.github.io/felixpaint/',
+    url: 'https://davtse15-alt.github.io/felixpaint/?v=20',
     image: 'assets/flex-paint.jpg',
     imageAlt: 'Wooden paint palette and smiling paintbrush making a rainbow arc',
     accent: '#3d84b8',
