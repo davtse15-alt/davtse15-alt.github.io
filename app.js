@@ -1,8 +1,7 @@
 const GITHUB_USER = 'davtse15-alt';
 const HUB_REPO = 'davtse15-alt.github.io';
-const HIDE_TOPIC = 'hide-from-playroom';
-const CACHE_KEY = 'playroom_discovered_games_v1';
-const CACHE_TTL_MS = 10 * 60 * 1000;
+const REQUIRED_TOPIC = 'playroom';
+const CACHE_KEY = 'playroom_discovered_games_v2';
 
 const PALETTES = [
   { accent: '#e86b51', accentDeep: '#c75138', artBg: '#fff1e4' },
@@ -189,6 +188,17 @@ function renderNewGames(list) {
   }
 }
 
+function getRepoUrl(repo) {
+  if (repo.has_pages) {
+    return `https://${GITHUB_USER}.github.io/${repo.name}/`;
+  }
+  const homepage = (repo.homepage || '').trim();
+  if (/^https?:\/\//i.test(homepage)) {
+    return homepage;
+  }
+  return null;
+}
+
 function mapRepoToGame(repo) {
   const palette = PALETTES[hashString(repo.name) % PALETTES.length];
   const rawDescription = (repo.description || '').trim();
@@ -202,7 +212,7 @@ function mapRepoToGame(repo) {
     repo: repo.name,
     title: formatRepoTitle(repo.name),
     description: cleanDescription,
-    url: `https://${GITHUB_USER}.github.io/${repo.name}/`,
+    url: getRepoUrl(repo),
     image: null,
     emoji: leadingEmoji,
     accent: palette.accent,
@@ -234,6 +244,24 @@ function writeCachedDiscovered(discovered) {
   }
 }
 
+function syncDiscoveredCards(discovered) {
+  const featuredIds = new Set(FEATURED_GAMES.map((g) => g.id));
+  const validIds = new Set([...featuredIds, ...discovered.map((g) => g.id)]);
+
+  // Remove stale discovered cards that were untagged or removed.
+  for (const id of [...renderedIds]) {
+    if (!validIds.has(id)) {
+      renderedIds.delete(id);
+      const cardEl = document.getElementById(`card-${id}`);
+      if (cardEl) cardEl.remove();
+      const idx = games.findIndex((g) => g.id === id);
+      if (idx !== -1) games.splice(idx, 1);
+    }
+  }
+
+  renderNewGames(discovered);
+}
+
 async function discoverGitHubGames() {
   const cached = readCachedDiscovered();
   if (cached && cached.games.length > 0) {
@@ -241,10 +269,6 @@ async function discoverGitHubGames() {
     if (!activeGameId && location.hash) {
       syncFromHash();
     }
-  }
-
-  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
-    return;
   }
 
   try {
@@ -263,17 +287,20 @@ async function discoverGitHubGames() {
 
     const discovered = repos
       .filter((repo) => {
-        if (!repo || !repo.has_pages || repo.archived || repo.disabled) return false;
+        if (!repo || repo.archived || repo.disabled) return false;
         const lowerName = repo.name.toLowerCase();
         if (lowerName === HUB_REPO.toLowerCase()) return false;
         if (featuredRepoNames.has(lowerName)) return false;
-        if (Array.isArray(repo.topics) && repo.topics.includes(HIDE_TOPIC)) return false;
-        return true;
+        const topics = Array.isArray(repo.topics)
+          ? repo.topics.map((t) => t.toLowerCase())
+          : [];
+        if (!topics.includes(REQUIRED_TOPIC)) return false;
+        return Boolean(getRepoUrl(repo));
       })
       .map(mapRepoToGame);
 
     writeCachedDiscovered(discovered);
-    renderNewGames(discovered);
+    syncDiscoveredCards(discovered);
 
     if (!activeGameId && location.hash) {
       syncFromHash();
