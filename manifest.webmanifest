@@ -1,0 +1,17 @@
+{
+  "name": "Playroom — Games Hub",
+  "short_name": "Playroom",
+  "description": "A cozy home for Drum Smash, Flex Paint, and Sound Steps.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8f4ea",
+  "theme_color": "#f8f4ea",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

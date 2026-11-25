@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f8f4ea" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Playroom" />
+  <meta name="description" content="A cozy game hub featuring Drum Smash, Flex Paint, and Sound Steps. Tap any game to play." />
+  <title>Playroom · Games Hub</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="hub" id="hub">
+    <header class="hub-header">
+      <div class="brand-mark" aria-hidden="true">
+        <img src="icon.svg" alt="" />
+      </div>
+      <h1>Playroom</h1>
+      <p>Pick a game to open and play.</p>
+    </header>
+
+    <section class="games-grid" id="gamesGrid" aria-label="Games"></section>
+  </main>
+
+  <section class="stage" id="gameStage" aria-label="Active game" aria-hidden="true">
+    <header class="stage-bar">
+      <button type="button" class="back-btn" id="backToGames">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Games</span>
+      </button>
+      <h2 class="stage-title" id="stageTitle"></h2>
+      <a class="external-btn" id="openExternal" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open game in a new tab" title="Open in a new tab">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14 4h6v6" />
+          <path d="M10 14L20 4" />
+          <path d="M20 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5" />
+        </svg>
+      </a>
+    </header>
+
+    <div class="stage-viewport">
+      <div class="stage-loader" id="stageLoader" role="status" aria-live="polite">
+        <div class="loader-dots" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span id="loaderLabel">Opening game…</span>
+      </div>
+      <iframe
+        id="gameFrame"
+        class="stage-frame"
+        title="Game"
+        allow="microphone; autoplay; fullscreen; clipboard-read; clipboard-write"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </section>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
