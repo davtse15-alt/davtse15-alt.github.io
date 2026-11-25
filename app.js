@@ -46,6 +46,28 @@ const FEATURED_GAMES = [
     accent: '#5c9178',
     accentDeep: '#43705b',
   },
+  {
+    id: 'mix-paint',
+    repo: 'mixpaint',
+    title: 'Mix Paint',
+    description: 'Mix primary colors in a studio bowl to discover new shades and paint with them.',
+    url: 'https://davtse15-alt.github.io/mixpaint/',
+    image: 'assets/mix-paint.jpg',
+    imageAlt: 'Mixing bowl of swirling rainbow paint with a smiling wooden spoon and paint jars',
+    accent: '#d69435',
+    accentDeep: '#b3761f',
+  },
+  {
+    id: 'numberblocks',
+    repo: 'numberblock',
+    title: 'Numberblocks',
+    description: 'Count, match, and tuck Numberblocks into bed, onto trains, and for snack time.',
+    url: 'https://davtse15-alt.github.io/numberblock/',
+    image: 'assets/numberblocks.jpg',
+    imageAlt: 'Colorful Numberblocks characters 1 through 5 standing in an ascending staircase',
+    accent: '#c96787',
+    accentDeep: '#a64d6b',
+  },
 ];
 
 const hub = document.getElementById('hub');
