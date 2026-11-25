@@ -39,13 +39,24 @@
         <span>Games</span>
       </button>
       <h2 class="stage-title" id="stageTitle"></h2>
-      <a class="external-btn" id="openExternal" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open game in a new tab" title="Open in a new tab">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M14 4h6v6" />
-          <path d="M10 14L20 4" />
-          <path d="M20 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5" />
-        </svg>
-      </a>
+      <div class="stage-actions">
+        <button type="button" class="fullscreen-btn" id="fullscreenBtn" aria-label="Enter full screen" aria-pressed="false" title="Full screen">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3" />
+            <path d="M16 3h3a2 2 0 0 1 2 2v3" />
+            <path d="M8 21H5a2 2 0 0 1-2-2v-3" />
+            <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
+          </svg>
+          <span>Full screen</span>
+        </button>
+        <a class="external-btn" id="openExternal" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open game in a new tab" title="Open in a new tab">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 4h6v6" />
+            <path d="M10 14L20 4" />
+            <path d="M20 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5" />
+          </svg>
+        </a>
+      </div>
     </header>
 
     <div class="stage-viewport">
@@ -64,6 +75,15 @@
         allow="microphone; autoplay; fullscreen; clipboard-read; clipboard-write"
         allowfullscreen
       ></iframe>
+      <button type="button" class="exit-fullscreen-btn" id="exitFullscreenBtn" aria-label="Exit full screen" title="Exit full screen (Esc)">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 14h4a2 2 0 0 1 2 2v4" />
+          <path d="M20 14h-4a2 2 0 0 0-2 2v4" />
+          <path d="M4 10h4a2 2 0 0 0 2-2V4" />
+          <path d="M20 10h-4a2 2 0 0 1-2-2V4" />
+        </svg>
+        <span>Exit</span>
+      </button>
     </div>
   </section>
 

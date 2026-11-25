@@ -78,6 +78,8 @@ const stageLoader = document.getElementById('stageLoader');
 const loaderLabel = document.getElementById('loaderLabel');
 const gameFrame = document.getElementById('gameFrame');
 const backToGamesBtn = document.getElementById('backToGames');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const exitFullscreenBtn = document.getElementById('exitFullscreenBtn');
 const openExternalLink = document.getElementById('openExternal');
 
 const games = [...FEATURED_GAMES];
@@ -85,6 +87,8 @@ const renderedIds = new Set();
 
 let activeGameId = null;
 let lastTriggerEl = null;
+let isStageFullscreen = false;
+let enteredNativeFullscreen = false;
 
 function hashString(str) {
   let hash = 0;
@@ -359,9 +363,89 @@ function openGame(game, { pushHash = false } = {}) {
   }
 }
 
+function getNativeFullscreenElement() {
+  return (
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.msFullscreenElement ||
+    null
+  );
+}
+
+function applyStageFullscreen(active) {
+  isStageFullscreen = Boolean(active);
+  gameStage.classList.toggle('is-fullscreen', isStageFullscreen);
+  if (fullscreenBtn) {
+    fullscreenBtn.setAttribute('aria-pressed', String(isStageFullscreen));
+  }
+}
+
+async function enterStageFullscreen() {
+  if (!activeGameId) return;
+  enteredNativeFullscreen = false;
+  applyStageFullscreen(true);
+
+  const requestFn =
+    gameStage.requestFullscreen ||
+    gameStage.webkitRequestFullscreen ||
+    gameStage.msRequestFullscreen;
+
+  if (typeof requestFn === 'function') {
+    try {
+      const result = requestFn.call(gameStage);
+      if (result && typeof result.then === 'function') {
+        await result;
+      }
+      if (getNativeFullscreenElement() === gameStage) {
+        enteredNativeFullscreen = true;
+      }
+    } catch {
+      // Native Fullscreen API unavailable or blocked; CSS full-viewport mode remains active.
+    }
+  }
+}
+
+function exitStageFullscreen() {
+  const shouldExitNative = Boolean(getNativeFullscreenElement());
+  enteredNativeFullscreen = false;
+  applyStageFullscreen(false);
+
+  if (shouldExitNative) {
+    const exitFn =
+      document.exitFullscreen ||
+      document.webkitExitFullscreen ||
+      document.msExitFullscreen;
+    if (typeof exitFn === 'function') {
+      try {
+        const result = exitFn.call(document);
+        if (result && typeof result.catch === 'function') {
+          result.catch(() => {});
+        }
+      } catch {
+        // Ignore fullscreen exit errors.
+      }
+    }
+  }
+}
+
+function syncNativeFullscreen() {
+  const nativeEl = getNativeFullscreenElement();
+  if (nativeEl === gameStage) {
+    enteredNativeFullscreen = true;
+    applyStageFullscreen(true);
+  } else if (enteredNativeFullscreen && isStageFullscreen) {
+    enteredNativeFullscreen = false;
+    applyStageFullscreen(false);
+  }
+}
+
 function closeGame({ updateHash = false } = {}) {
   if (!activeGameId && !gameStage.classList.contains('is-open')) return;
   activeGameId = null;
+
+  if (isStageFullscreen || getNativeFullscreenElement()) {
+    exitStageFullscreen();
+  }
 
   gameStage.classList.remove('is-open');
   gameStage.setAttribute('aria-hidden', 'true');
@@ -395,9 +479,28 @@ backToGamesBtn.addEventListener('click', () => {
   closeGame({ updateHash: true });
 });
 
+if (fullscreenBtn) {
+  fullscreenBtn.addEventListener('click', () => {
+    enterStageFullscreen();
+  });
+}
+
+if (exitFullscreenBtn) {
+  exitFullscreenBtn.addEventListener('click', () => {
+    exitStageFullscreen();
+  });
+}
+
+document.addEventListener('fullscreenchange', syncNativeFullscreen);
+document.addEventListener('webkitfullscreenchange', syncNativeFullscreen);
+
 window.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && activeGameId) {
-    closeGame({ updateHash: true });
+    if (isStageFullscreen) {
+      exitStageFullscreen();
+    } else {
+      closeGame({ updateHash: true });
+    }
   }
 });
 
