@@ -1,25 +1,16 @@
 # Playroom
 
-A single-page game hub featuring **Drum Smash**, **Flex Paint**, and **Sound Steps**.
+A single-page game hub featuring **Drum Smash**, **Flex Paint**, **Sound Steps**, and any new GitHub Pages games you publish.
 
 **Live site:** https://davtse15-alt.github.io/
 
-## Adding another game
+## Adding another game (automatic)
 
-1. Add a 4:3 card image to `assets/`.
-2. Add a new entry to the `GAMES` array in `app.js`:
+1. Create a new public repo under `davtse15-alt` and turn on **GitHub Pages**.
+2. That's it — Playroom automatically discovers it and adds a card using the repo name and description.
+   - **Tip:** Start the repo's GitHub description with an emoji (e.g., `🚀 Stack colourful space blocks`) to show that emoji on the card cover automatically.
+   - **Hide a non-game repo:** Add the GitHub topic `hide-from-playroom` to any Pages repo you don't want shown on Playroom.
 
-```js
-{
-  id: 'my-new-game',
-  title: 'My New Game',
-  description: 'Short description shown on the card.',
-  url: 'https://davtse15-alt.github.io/my-new-game/',
-  image: 'assets/my-new-game.jpg',
-  imageAlt: 'Illustration description',
-  accent: '#e86b51',
-  accentDeep: '#c75138',
-}
-```
+## Customizing a game with artwork (optional)
 
-3. Push to `main` — GitHub Pages updates automatically.
+If you want a custom illustration or title for a game, upload an image to `assets/` and add an entry to `FEATURED_GAMES` in `app.js`.
